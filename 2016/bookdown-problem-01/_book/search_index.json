@@ -1,0 +1,4 @@
+[
+["index.html", "This is an example gitbook Preface", " This is an example gitbook Preface This is an example gitbook "],
+["leaflet-map.html", "1 Leaflet Map", " 1 Leaflet Map 1.0.1 Problem The control buttons in the upper-right corner of the map are not styled correctly. Their transparent background and the missing button image on the lower button are the result of the default gitbook css style overriding the leaflet.extras style. library(leaflet) library(leaflet.extras) #devtools::install_github(&#39;bhaskarvk/leaflet.extras&#39;) leaflet() %&gt;% addTiles() %&gt;% setView(-93.65, 42.0285, zoom = 14) %&gt;% addFullscreenControl() 1.0.2 Desired Outcome I would like for the map controls to look like this instead: "]
+]
