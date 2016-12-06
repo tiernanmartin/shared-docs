@@ -58,6 +58,8 @@
 <script src="libs/leaflet-binding-1.0.2.9008/leaflet.js"></script>
 <link href="libs/fullscreen-1.0.1/leaflet.fullscreen.css" rel="stylesheet" />
 <script src="libs/fullscreen-1.0.1/Leaflet.fullscreen.min.js"></script>
+<script src="libs/leaflet-providers-1.0.27/leaflet-providers.js"></script>
+<script src="libs/leaflet-providers-plugin-1.0.2.9008/leaflet-providers-plugin.js"></script>
 
 
 <style type="text/css">
@@ -144,8 +146,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <span class="st">        </span><span class="kw">addTiles</span>() %&gt;%<span class="st"> </span>
 <span class="st">        </span><span class="kw">setView</span>(-<span class="fl">93.65</span>, <span class="fl">42.0285</span>, <span class="dt">zoom =</span> <span class="dv">14</span>) %&gt;%<span class="st"> </span>
 <span class="st">        </span><span class="kw">addFullscreenControl</span>()</code></pre></div>
-<div id="htmlwidget-a3a6993292655ce1342e" style="width:672px;height:480px;" class="leaflet html-widget"></div>
-<script type="application/json" data-for="htmlwidget-a3a6993292655ce1342e">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}},"fullscreenControl":{"position":"topleft"}},"calls":[{"method":"addTiles","args":["http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"maxNativeZoom":null,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"continuousWorld":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":null,"unloadInvisibleTiles":null,"updateWhenIdle":null,"detectRetina":false,"reuseTiles":false,"attribution":"&copy; <a href=\"http://openstreetmap.org\">OpenStreetMap\u003c/a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA\u003c/a>"}]}],"setView":[[42.0285,-93.65],14,[]]},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-d9157ade1850750f4b11" style="width:672px;height:480px;" class="leaflet html-widget"></div>
+<script type="application/json" data-for="htmlwidget-d9157ade1850750f4b11">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}},"fullscreenControl":{"position":"topleft"}},"calls":[{"method":"addTiles","args":["http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"maxNativeZoom":null,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"continuousWorld":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":null,"unloadInvisibleTiles":null,"updateWhenIdle":null,"detectRetina":false,"reuseTiles":false,"attribution":"&copy; <a href=\"http://openstreetmap.org\">OpenStreetMap\u003c/a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA\u003c/a>"}]}],"setView":[[42.0285,-93.65],14,[]]},"evals":[],"jsHooks":[]}</script>
 </div>
 <div id="desired-outcome" class="section level3">
 <h3><span class="header-section-number">1.0.2</span> Desired Outcome</h3>
@@ -154,6 +156,15 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <img src="images/map-buttons-correct.png" />
 
 </div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(miscgis)</code></pre></div>
+<pre><code>## Warning in CPL_gdal_init(): &#39;.Random.seed&#39; is not an integer vector but of
+## type &#39;NULL&#39;, so ignored</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">myLflt</span>() %&gt;%<span class="st"> </span>
+<span class="st">        </span><span class="kw">myLfltOpts</span>() %&gt;%<span class="st"> </span>
+<span class="st">        </span><span class="kw">addTiles</span>() %&gt;%<span class="st"> </span>
+<span class="st">        </span><span class="kw">setView</span>(-<span class="fl">93.65</span>, <span class="fl">42.0285</span>, <span class="dt">zoom =</span> <span class="dv">14</span>)</code></pre></div>
+<div id="htmlwidget-c07a7b5515e6fa4990cb" style="width:672px;height:480px;" class="leaflet html-widget"></div>
+<script type="application/json" data-for="htmlwidget-c07a7b5515e6fa4990cb">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}},"fullscreenControl":{"position":"topleft"}},"calls":[{"method":"addTiles","args":["//{s}.tiles.mapbox.com/v3/jcheng.map-5ebohr46/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"maxNativeZoom":null,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"continuousWorld":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":null,"unloadInvisibleTiles":null,"updateWhenIdle":null,"detectRetina":false,"reuseTiles":false,"attribution":""}]},{"method":"addProviderTiles","args":["CartoDB.PositronOnlyLabels","labels_layer",null,{"errorTileUrl":"","noWrap":false,"zIndex":null,"unloadInvisibleTiles":null,"updateWhenIdle":null,"detectRetina":false,"reuseTiles":false}]},{"method":"addTiles","args":["http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"maxNativeZoom":null,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"continuousWorld":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":null,"unloadInvisibleTiles":null,"updateWhenIdle":null,"detectRetina":false,"reuseTiles":false,"attribution":"&copy; <a href=\"http://openstreetmap.org\">OpenStreetMap\u003c/a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA\u003c/a>"}]}],"setView":[[42.0285,-93.65],14,[]]},"evals":[],"jsHooks":{"render":[{"code":"function(el, x, data) {\n  return (function(el, t){var myMap = this;var shadowPane = myMap.getPanes().shadowPane;shadowPane.style.pointerEvents = 'none';shadowPane.appendChild(myMap.layerManager._byLayerId['tile\\nlabels_layer'].getContainer());myMap.removeControl(myMap.attributionControl);myMap.removeControl(myMap.zoomControl);}).call(this.getMap(), el, x, data);\n}","data":null}]}}</script>
 
 </div>
 </div>
