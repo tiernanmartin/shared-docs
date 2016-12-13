@@ -1,0 +1,90 @@
+---
+title: "ACS Objects in Dataframes"
+author: Tiernan Martin
+date: "2016-12-12"
+output: html_notebook
+---
+
+### Introduction
+This is an exploration of how to work with `acs` objects, which are `S4` and come from the `acs` [package](https://cran.r-project.org/web/packages/acs/acs.pdf), inside a dataframe. This exploration is inspired by the approach suggested by Jenny Bryan in her [Plotcon 2016 presentation](https://www.youtube.com/watch?v=4MfUCX_KpdE), which highlights some of the benefits of keeping related objects in a dataframe.
+
+
+```{r setup}
+library(acs)
+library(tidyverse)
+
+```
+
+### Test Data: US States
+From the US Census's API, download a few tables from different years or of differeing span lengths. _Note: you'll need an API key in order to connect to server. Keys are free and available [here](http://api.census.gov/data/key_signup.html)._
+
+```{r download-data,echo=TRUE,cache=TRUE}
+race_2015 <- acs::acs.fetch(endyear = 2015,span = 1,geography = geo.make(state = '*'),table.number = "B03002",col.names = 'pretty')
+glimpse(race_2015)
+```
+
+### New Variable: `POC_COUNT` (People of Color)
+The first method shows the way that the `acs` objects are intended to be combined and manipulated, as described in the package [supplementary documentation](http://eglenn.scripts.mit.edu/citystate/wp-content/uploads/2013/06/wpid-working_with_acs_R3.pdf).
+
+```{r poc, echo=TRUE}
+
+# Find the column index for all people (total)
+
+total <- acs.colnames(race_2015)[[which(str_detect(acs.colnames(race_2015),'Total:$'))]]
+
+# Find the column index for non-hispanic whites
+
+white_nonhisp <- acs.colnames(race_poc_2015)[[which(str_detect(acs.colnames(race_2015),'Not Hispanic or Latino: White alone$'))]]
+
+
+# Create the new column: 'POC_COUNT'
+poc_2015 <- race_2015[,total] - race_2015[,white_nonhisp]
+acs.colnames(poc_2015) <- 'POC_COUNT'
+
+# Combine the new acs object with the original and print a summary
+
+race_poc_2015 <- cbind.acs(race_2015,poc_2015)
+
+summary(race_poc_2015[,c(total,white_nonhisp,'POC_COUNT')])
+
+```
+
+
+The second method shows how the `acs` object can be split into observations and rows, and then stored in a dataframe so that it can be manipulated with and combined.
+
+```{r poc-df, echo=TRUE}
+
+race_poc_2015_df <- 
+        race_poc_2015 %>% 
+        apply(2,function(x){apply(x,1,list) %>% as_tibble}) %>% 
+        as_tibble()
+colnames(race_poc_2015_df) <- acs.colnames(race_poc_2015)
+
+
+race_poc_2015_df  <-  
+        race_poc_2015_df %>% 
+        select(TOTAL_COUNT = matches(total),
+               WHITE_COUNT = matches(white_nonhisp),
+               POC_COUNT) %>% 
+        mutate(POC_COUNT_DF = map2(TOTAL_COUNT,WHITE_COUNT, ~ .x - .y))
+        
+race_poc_2015_df %>% head() %>% print(n = 5)
+```
+
+When checked, it is clear that `POC_COUNT` and `POC_COUNT_DF` are identical:
+```{r}
+# Comparison
+
+compare_acs <- 
+        race_poc_2015_df %>% 
+        select(matches('POC')) %>%      # select the desired columns
+        map(.f = function(x)unlist(x) %>% Reduce('rbind.acs',x = .)) %>%   # transform each column into an acs object      
+        unlist() %>% 
+        Reduce('cbind.acs',x = .)       # combine the acs objects into one acs object
+print(compare_acs[1:10,])
+
+comp_df <- data.frame(estimate(compare_acs[,1]),estimate(compare_acs[,2]))
+
+all(comp_df[[1]] == comp_df[[2]])
+```
+
