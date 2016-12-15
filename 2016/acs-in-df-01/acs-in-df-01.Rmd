@@ -12,6 +12,8 @@ This is an exploration of how to work with `acs` objects, which are `S4` and com
 ```{r setup}
 library(acs)
 library(tidyverse)
+library(tigris)
+library(sf)
 
 ```
 
@@ -86,5 +88,33 @@ print(compare_acs[1:10,])
 comp_df <- data.frame(estimate(compare_acs[,1]),estimate(compare_acs[,2]))
 
 all(comp_df[[1]] == comp_df[[2]])
+```
+
+### Simple Feature
+What if these acs object were stored in a dataframe-like object along with their corresponding geometries? This is what the `sf` package does. More information on this package can be found [here](https://github.com/edzer/sfr/blob/master/README.md).
+
+```{r poc-sf}
+
+# Download state polygons
+
+states_sf <- 
+        tigris::states(cb = TRUE, resolution = '20m') %>% 
+        st_as_sf()
+
+# Build a join hook for the acs_df object
+# and join the sf states object
+
+col_to_acs <- function(acs){acs %>% transpose %>% unlist %>% Reduce('rbind.acs',x = .)}
+
+get_acs <- function(acs_list,acs_fun,col){acs_list %>% unlist(use.names = FALSE) %>% acs_fun() %>% .[[col]]}
+
+states_acs_sf <- 
+        race_poc_2015_df %>% 
+        mutate(NAME = map_chr(WHITE_COUNT,get_acs,acs_fun = geography,col = 'NAME')) %>% 
+        right_join(states_sf,by = 'NAME') %>% 
+        st_as_sf()
+
+states_acs_sf
+
 ```
 
