@@ -1,6 +1,6 @@
 book_filename: bookdown
 repo: https://github.com/rstudio/bookdown/
-output_dir: _book
+output_dir: gitbook
 clean: [packages.bib, bookdown.bbl]
 language:
   label:

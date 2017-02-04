@@ -1,10 +1,8 @@
 --- 
-title: "bookdown: Authoring Books and Technical Documents with R Markdown"
-author: "Yihui Xie"
+title: "Tibble formatting trouble"
+author: "Tiernan Martin"
 date: "`r Sys.Date()`"
 knit: "bookdown::render_book"
-documentclass: krantz
-link-citations: yes
 colorlinks: yes
 lot: yes
 lof: yes
@@ -24,13 +22,15 @@ options(
 lapply(c('DT', 'citr', 'formatR', 'svglite'), function(pkg) {
   if (system.file(package = pkg) == '') install.packages(pkg)
 })
+
+library(magrittr)
+library(tidyverse)
+
 ```
 
 # This is a test {-}
 
 ```{r test-one}
-library(magrittr)
-library(tidyverse)
 
 mtcars %>% rownames_to_column() %>% as_tibble()
 ```
