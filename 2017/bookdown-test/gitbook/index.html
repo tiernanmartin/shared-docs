@@ -125,23 +125,24 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </div>
 <div id="this-is-a-test" class="section level1 unnumbered">
 <h1>This is a test</h1>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mtcars <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">rownames_to_column</span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as_tibble</span>()</code></pre></div>
-<pre><code>## # A tibble: 32 × 12
-##              rowname   mpg   cyl  disp    hp  drat
-##                &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-## 1          Mazda RX4  21.0     6 160.0   110  3.90
-## 2      Mazda RX4 Wag  21.0     6 160.0   110  3.90
-## 3         Datsun 710  22.8     4 108.0    93  3.85
-## 4     Hornet 4 Drive  21.4     6 258.0   110  3.08
-## 5  Hornet Sportabout  18.7     8 360.0   175  3.15
-## 6            Valiant  18.1     6 225.0   105  2.76
-## 7         Duster 360  14.3     8 360.0   245  3.21
-## 8          Merc 240D  24.4     4 146.7    62  3.69
-## 9           Merc 230  22.8     4 140.8    95  3.92
-## 10          Merc 280  19.2     6 167.6   123  3.92
-## # ... with 22 more rows, and 6 more variables:
-## #   wt &lt;dbl&gt;, qsec &lt;dbl&gt;, vs &lt;dbl&gt;, am &lt;dbl&gt;,
-## #   gear &lt;dbl&gt;, carb &lt;dbl&gt;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">nc <span class="op">%&gt;%</span><span class="st"> </span>unclass <span class="op">%&gt;%</span><span class="st"> </span>as_tibble</code></pre></div>
+<pre><code>## # A tibble: 100 × 15
+##     AREA PERIMETER CNTY_ CNTY_ID        NAME   FIPS
+##    &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;      &lt;fctr&gt; &lt;fctr&gt;
+## 1  0.114     1.442  1825    1825        Ashe  37009
+## 2  0.061     1.231  1827    1827   Alleghany  37005
+## 3  0.143     1.630  1828    1828       Surry  37171
+## 4  0.070     2.968  1831    1831   Currituck  37053
+## 5  0.153     2.206  1832    1832 Northampton  37131
+## 6  0.097     1.670  1833    1833    Hertford  37091
+## 7  0.062     1.547  1834    1834      Camden  37029
+## 8  0.091     1.284  1835    1835       Gates  37073
+## 9  0.118     1.421  1836    1836      Warren  37185
+## 10 0.124     1.428  1837    1837      Stokes  37169
+## # ... with 90 more rows, and 9 more variables:
+## #   FIPSNO &lt;dbl&gt;, CRESS_ID &lt;int&gt;, BIR74 &lt;dbl&gt;,
+## #   SID74 &lt;dbl&gt;, NWBIR74 &lt;dbl&gt;, BIR79 &lt;dbl&gt;,
+## #   SID79 &lt;dbl&gt;, NWBIR79 &lt;dbl&gt;, geom &lt;simple_feature&gt;</code></pre>
 
 </div>
             </section>

@@ -25,13 +25,14 @@ lapply(c('DT', 'citr', 'formatR', 'svglite'), function(pkg) {
 
 library(magrittr)
 library(tidyverse)
-
+library(sf)
+demo(nc, ask = FALSE, echo = FALSE, verbose = FALSE)
 ```
 
 # This is a test {-}
 
 ```{r test-one}
 
-mtcars %>% rownames_to_column() %>% as_tibble()
+nc %>% unclass %>% as_tibble
 ```
 
