@@ -21,7 +21,7 @@ library(sf)
 From the US Census's API, download a few tables from different years or of differeing span lengths. _Note: you'll need an API key in order to connect to server. Keys are free and available [here](http://api.census.gov/data/key_signup.html)._
 
 ```{r download-data,echo=TRUE,cache=TRUE}
-race_2015 <- acs::acs.fetch(endyear = 2015,span = 1,geography = geo.make(state = '*'),table.number = "B03002",col.names = 'pretty')
+race_poc_2015 <- acs::acs.fetch(endyear = 2015,span = 1,geography = geo.make(state = '*'),table.number = "B03002",col.names = 'pretty')
 glimpse(race_2015)
 ```
 
@@ -32,7 +32,7 @@ The first method shows the way that the `acs` objects are intended to be combine
 
 # Find the column index for all people (total)
 
-total <- acs.colnames(race_2015)[[which(str_detect(acs.colnames(race_2015),'Total:$'))]]
+total <- acs.colnames(race_poc_2015)[[which(str_detect(acs.colnames(race_poc_2015),'Total:$'))]]
 
 # Find the column index for non-hispanic whites
 
