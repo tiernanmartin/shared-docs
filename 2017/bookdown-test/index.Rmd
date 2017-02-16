@@ -3,6 +3,9 @@ title: "Tibble formatting trouble"
 author: "Tiernan Martin"
 date: "`r Sys.Date()`"
 knit: "bookdown::render_book"
+output:
+  bookdown::gitbook:
+    df_print: paged
 colorlinks: yes
 lot: yes
 lof: yes
@@ -10,7 +13,6 @@ fontsize: 12pt
 monofont: "Source Code Pro"
 monofontoptions: "Scale=0.7"
 site: bookdown::bookdown_site
-df_print: tibble
 ---
 
 ```{r setup, include=FALSE}
@@ -26,6 +28,7 @@ lapply(c('DT', 'citr', 'formatR', 'svglite'), function(pkg) {
 library(magrittr)
 library(tidyverse)
 library(sf)
+library(knitr)
 demo(nc, ask = FALSE, echo = FALSE, verbose = FALSE)
 ```
 
@@ -33,6 +36,12 @@ demo(nc, ask = FALSE, echo = FALSE, verbose = FALSE)
 
 ```{r test-one}
 
-nc %>% unclass %>% as_tibble
+nc %>% unclass %>% as_tibble %>% as_data_frame()
+```
+
+```{r test-two}
+
+mtcars %>% rownames_to_column()
+
 ```
 

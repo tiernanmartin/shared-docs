@@ -1,4 +1,5 @@
 book_filename: bookdown
+df_print: kable
 repo: https://github.com/rstudio/bookdown/
 output_dir: gitbook
 clean: [packages.bib, bookdown.bbl]

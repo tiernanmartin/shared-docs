@@ -1,0 +1,38 @@
+---
+title: "DT Leaflet Popup"
+output: html_notebook
+---
+
+```{r setup}
+library(leaflet)
+library(DT)
+library(tibble)
+
+
+```
+
+This is an exploration of how to integrat `DT` tables into a `leaflet` popup.
+
+```{r}
+
+library(leaflet)
+library(DT)
+library(tibble)
+
+# Test data
+site <- tribble(
+                  ~ Name,      ~Lat,        ~Lon,
+        'Samurai Noodle', 47.597131, -122.327298
+)
+
+test_dt <- DT::datatable(site)
+
+# Doesn't work
+leaflet(site) %>% 
+        addTiles() %>%
+  addMarkers(~Lon, ~Lat, 
+             popup = test_dt
+             )
+
+```
+
