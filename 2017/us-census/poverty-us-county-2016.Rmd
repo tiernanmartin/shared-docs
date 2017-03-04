@@ -1,0 +1,103 @@
+---
+title: "US Poverty by County, 2016"
+output: html_notebook
+df_print: paged
+---
+
+
+```{r setup, echo=FALSE}
+library(magrittr)
+library(stringr)
+library(acs)
+library(tigris)         # devtools::install_github('walkerke/tigris')
+library(ggplot2)        # devtools::install_github('tidyverse/ggplot2')
+library(sf)             # devtools::install_github('edzer/sfr')
+library(tidyverse)
+```
+
+### Motivation
+
+In the lead-up to this year's eventful Oscar's award night, the New York Times published an [article](https://www.nytimes.com/interactive/2017/02/24/movies/oscars-state-by-state-movie-popularity.html) that examined the regional popularity of the best Picture nominees. 
+
+![Popularity of Oscars Best Picture Nominees, 2017](us-oscars.png)
+
+I found that the maps confirmed many of my biases about America's regional values and cultures. 
+
+
+### Setup
+
+The following packages play major roles in this workflow:
+
+  * `tidyverse`
+  * `acs`
+  * `sf`
+  * `ggplot2`
+  
+
+### Gameplan
+
+  1. Download the data (spatial and metadata)
+  2. Create the indicator (share of impoverished individuals)
+  3. Make a histogram (colored map)
+  
+
+### Data
+
+```{r data-metadata-prep}
+
+# prepare the Census API
+
+api.key.install(key = '')
+
+
+# figure out which poverty table to download
+
+pov_tbls <- 
+        acs.lookup(2015,keyword = 'poverty',case.sensitive = FALSE) %>% 
+        .@results %>% 
+        map(tibble) %>% 
+        reduce(cbind) %>% 
+        set_colnames(c('SUBTOPIC','TOPIC','TOPIC_DESC','SUBTOPIC_DESC'))
+
+print(pov_tbls)
+
+```
+
+```{r data-metadata-download}
+
+
+pov_table_name <- 'B06012'
+
+all_counties <- geo.make(state = '*',county = '*')
+
+
+if(!exists('pov_by_cnty')){
+        pov_by_cnty <- acs.fetch(endyear = 2015,
+                         span = 5,
+                         geography = all_counties,
+                         table.number = pov_table_name)
+}
+
+str(pov_by_cnty)
+
+```
+
+```{r data-metadata-tidy}
+
+pov_tbl_acs <- 
+        pov_by_cnty %>% 
+        apply(2,function(x){apply(x,1,list) %>% as_tibble}) %>%
+                        set_colnames(str_c('ACS',acs.colnames(pov),sep = '_'))%>% 
+        mutate(NAME = map_chr(.x = {extract2(.,1)},
+                              .f = ~ geography(.x) %>% extract2('NAME')),
+               STATE_ID = map_chr(.x = {extract2(.,1)},
+                                .f = ~ geography(.x) %>% extract2('state')),
+               CNTY_ID = map_chr(.x = {extract2(.,1)},
+                                .f = ~ geography(.x) %>% extract2('county')),
+               UNIQUE_ID = str_c(STATE_ID, CNTY_ID, sep = '_')) %>% 
+        select(NAME:UNIQUE_ID,everything())
+
+
+```
+
+
