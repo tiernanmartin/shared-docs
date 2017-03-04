@@ -43,6 +43,14 @@ The following packages play major roles in this workflow:
 
 ### Data
 
+#### Spatial (Simple Features)
+
+```{r data-sf}
+
+```
+
+
+#### Metadata
 ```{r data-metadata-prep}
 
 # prepare the Census API
@@ -97,6 +105,26 @@ pov_tbl_acs <-
                UNIQUE_ID = str_c(STATE_ID, CNTY_ID, sep = '_')) %>% 
         select(NAME:UNIQUE_ID,everything())
 
+
+# create the new indicator: share of impoverished population
+
+pov_tbl_acs_impoverished <-
+        pov_tbl_acs %>% 
+        mutate(ACS_PCT_IMPOVERISHED = map2(.x = ACS_B06012_002,
+                                       .y = ACS_B06012_001,
+                                       .f = ~ acs::divide.acs(.x,.y,method = 'proportion', verbose = FALSE))) %>% 
+        select(NAME:UNIQUE_ID,ACS_PCT_IMPOVERISHED)
+
+
+# wide-long-wide transformation
+
+pov_tbl <- 
+        pov_tbl_acs_impoverished %>% 
+        mutate(ACS_PCT_IMPV_EST = map_dbl(ACS_PCT_IMPOVERISHED, ~ acs::estimate(.x) %>% round_any(.01)),
+               ACS_PCT_IMPV_SE = map_dbl(ACS_PCT_IMPOVERISHED, ~ acs::standard.error(.x) %>% round_any(.001))) %>% 
+        select(-matches('ACS'))
+        
+        
 
 ```
 
