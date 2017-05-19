@@ -1,0 +1,88 @@
+---
+output: html_notebook
+---
+
+### Load the packages
+
+```{r setup}
+library(tidyverse)
+library(sf)
+library(spdep)
+library(purrr)
+library(magrittr)
+library(forcats)
+
+
+```
+
+### Load the data
+
+```{r}
+nc <- st_read(system.file("shape/nc.shp", package="sf")) 
+
+nc_shp <- as(nc, 'Spatial')
+```
+
+
+
+### Spatial clustering test
+Steps:
+
+  1. Create a new variable (`NW_PCT`) to test for spatial clustering using a local indicator of spatial association (this example will use Local Moran I)
+  2. Find neighbors using rook's case contiguity
+  3. Calculate the local moran I
+    * save the statistic itself (`LOCAL_M_I`) and its p-value (`LOCAL_M_P`) 
+  4. Categorize the clusters into four "quadrants" according to two variables:
+    * their relationship to the mean `NW_PCT` value (`HIGH` if greater than, `LOW` is less than)
+    * their relationship to the mean `LOCAL_M_I` value (`HIGH` if greater than, `LOW` is less than)
+  5. Categorize the clusters with local Moran p-value less than 0.1 as `INSIGNIFICANT`
+
+```{r}
+nc %<>% mutate(NW_PCT = NWBIR74/BIR74)  
+
+nb_list <- nb2listw(poly2nb(nc_shp,queen = FALSE))
+
+extract_localmoran <- function(x,y,stat_name){ 
+        localmoran(x,y) %>% as_data_frame %>% extract2(stat_name) %>% unclass %>% as.numeric()
+        }
+
+nc_local_moran <- 
+        nc %>%  
+        mutate(LOCAL_M_I = extract_localmoran(NW_PCT, nb_list, 'Ii'),
+               LOCAL_M_P = extract_localmoran(NW_PCT, nb_list, 'Pr(z > 0)'),
+               QUADRANTS = case_when(NW_PCT >= mean(NW_PCT) & LOCAL_M_I >= mean(NW_PCT) ~ 'HIGH/HIGH',
+                                    NW_PCT >= mean(NW_PCT) & LOCAL_M_I < mean(NW_PCT) ~ 'HIGH/LOW',
+                                    NW_PCT < mean(NW_PCT) & LOCAL_M_I >= mean(NW_PCT) ~ 'LOW/HIGH',
+                                    TRUE ~ 'LOW/LOW'),
+               QUADRANTS = if_else(LOCAL_M_P > 0.1, 'INSIGNIFICANT', QUADRANTS),
+               QUADRANTS = factor(QUADRANTS, 
+                                 ordered = TRUE,
+                                 levels = c(
+                                         'HIGH/HIGH',
+                                         'HIGH/LOW',
+                                         'LOW/HIGH',
+                                         'LOW/LOW'
+                                 )),
+               QUADRANTS = fct_rev(QUADRANTS)) 
+
+
+
+```
+
+### Plot the results
+
+```{r}
+
+nc_local_moran %>% 
+        select(NW_PCT, LOCAL_M_I, QUADRANTS) %>% 
+        plot
+
+```
+
+
+
+
+
+
+
+
